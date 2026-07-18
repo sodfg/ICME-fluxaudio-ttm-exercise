@@ -8,6 +8,11 @@ NTU 專題／畢業論文練習專案，參加 ICME 2026 Grand Challenge 的 Tex
 
 - `flux_audio_formal.ipynb` — 目前唯一維護的主線 notebook，包含完整 8 階段 pipeline。
 
+## 圖解說明
+
+- [三個雲的儲存空間地圖](https://claude.ai/code/artifact/6fc6c7ae-b229-42cd-8079-660d0d822fd0)
+  — 視覺化說明 symlink、npz、av_bench，以及資料／checkpoint／生成音檔分別存在哪個空間。
+
 ## Pipeline（8 個階段）
 
 1. 掛載 Google Drive、快取檢查 + 環境安裝：clone `ICME26-ATTM-GC-FluxAudio`、安裝套件
