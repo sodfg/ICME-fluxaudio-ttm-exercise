@@ -1,0 +1,26 @@
+# 本地草稿 / 舊版 notebook（不進 git，只留在本機備份）
+_old_drafts/
+
+# Claude Code 本機設定檔，非專案內容
+CLAUDE.md
+
+# Jupyter
+.ipynb_checkpoints/
+
+# 模型權重、checkpoint、音檔、資料集（放 Google Drive，不進 git）
+*.pth
+*.ckpt
+*.safetensors
+*.wav
+*.mp3
+*.flac
+*.zip
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# OS
+.DS_Store
