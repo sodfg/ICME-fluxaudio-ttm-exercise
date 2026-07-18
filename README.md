@@ -10,7 +10,7 @@ NTU 專題／畢業論文練習專案，參加 ICME 2026 Grand Challenge 的 Tex
 
 ## Pipeline（8 個階段）
 
-1. 快取檢查 + 環境安裝：clone `ICME26-ATTM-GC-FluxAudio`、安裝套件
+1. 掛載 Google Drive、快取檢查 + 環境安裝：clone `ICME26-ATTM-GC-FluxAudio`、安裝套件
 2. 下載輔助組件權重（MeanAudio 預訓練權重）
 3. 雲端快取流：從 Google Drive 下載/解壓已預處理好的 Jamendo 音檔
 4. 資料前處理：切分 train / val / test
@@ -24,11 +24,10 @@ NTU 專題／畢業論文練習專案，參加 ICME 2026 Grand Challenge 的 Tex
 模型權重、資料集與訓練 checkpoint **不放在這個 repo**。目前這份主線 notebook 的實際存取方式：
 
 - **資料**：透過 `gdown` 從學長分享的 Google Drive 檔案 ID 下載預處理好的 Jamendo zip（第三階段），單向下載，不是掛載自己的 Drive
-- **checkpoint / 生成音檔**：訓練與生成都在 Colab 本機 `/content` 進行，最後用 `files.download()` 手動下載到自己電腦（第七、八階段）
+- **checkpoint**：訓練前會掛載 Google Drive，並把 `exps/{EXP_ID}` symlink 到 `MyDrive/FluxAudio_checkpoints/{EXP_ID}/`，訓練中每次存檔都直接寫進 Drive，不用等訓練結束才手動下載，Colab 斷線也不會遺失
+- **生成音檔**：目前仍是訓練/生成都在 Colab 本機 `/content` 進行，最後用 `files.download()` 手動下載到自己電腦（第七階段）
 
-⚠️ **這代表 checkpoint 沒有中途自動備份** — 如果 Colab runtime 在你下載 checkpoint 之前斷線，訓練成果會直接遺失。目前 `num_iterations=1000` 只是小規模測試，之後要跑正式訓練時，建議比照舊版 notebook 的做法加回 Google Drive 自動同步（例如訓練中定期把 `exps/{EXP_ID}` symlink 到 Drive），不要只靠最後手動下載一次。
-
-notebook 開頭的設定 cell（`PROJECT_DIR` / `EVAL_DIR` / `EXP_ID`）統一管理路徑與實驗名稱，重新命名實驗時只需要改這一格。
+notebook 開頭的設定 cell（`PROJECT_DIR` / `EVAL_DIR` / `EXP_ID` / `DRIVE_CHECKPOINT_DIR`）統一管理路徑與實驗名稱，重新命名實驗時只需要改這一格，checkpoint 在 Drive 上的路徑會自動跟著換。
 
 ## 評估工具
 
