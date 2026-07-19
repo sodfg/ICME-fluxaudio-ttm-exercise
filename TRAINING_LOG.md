@@ -11,3 +11,4 @@
 | 2026-07-15 | fluxaudio_s_50k | 50000 / 50000（訓練完成） | 分段跑完（曾中斷於 19999 步，checkpoint 自動接續） |
 | 2026-07-15 | fluxaudio_s_50k | 推論完成 | test set 100 個 caption 都生成了，已下載 `generated_audio.zip` |
 | 2026-07-17 | fluxaudio_s_50k | 評估完成 | FAD = 0.574，CLAP = 0.219 |
+| 2026-07-19 | mini_test_1k | 訓練/推論/評估全部跑完 | 1000 步、只生成 3 首，FAD = 1.0957，CLAP = 0.0298（分數差是預期中的事，這個實驗的目的只是驗證 pipeline 通不通） |
