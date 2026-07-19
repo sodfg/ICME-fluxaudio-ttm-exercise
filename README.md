@@ -27,6 +27,21 @@ NTU 專題／畢業論文練習專案，參加 ICME 2026 Grand Challenge 的 Tex
 7. 推論：用訓練好的模型生成音樂並試聽/下載
 8. 評估：計算 FAD（Fréchet Audio Distance）與 CLAP score
 
+## 模型選擇：為什麼用 FluxAudio-S，不是 FluxAudio-L
+
+baseline repo 提供兩種模型大小，兩份 notebook 從頭到尾都只用過 **FluxAudio-S**：
+
+| | FluxAudio-S | FluxAudio-L |
+|---|---|---|
+| 參數量 | 120M | 480M（4 倍大） |
+| 訓練腳本 | `train_fluxaudio_s.sh` | `train_fluxaudio_l.sh` |
+
+**為什麼選 S：**
+
+- **記憶體限制**：官方訓練 S 版（`batch_size=128`）在 A6000 上就要吃到 45GB VRAM；Colab 這邊用的是 22.5GB 記憶體的顯卡，訓練 S 版已經得把 `batch_size` 降到 32 才塞得下。L 版參數量是 4 倍，很可能連塞進去都有困難，得再大幅壓低 batch size，訓練也會更慢。
+- **跟官方 baseline 比較時是公平的**：查過官方公布的 baseline 分數（FAD=0.6073、CLAP=0.2015），[明確寫著是針對 `fluxaudio_s` 模型算的](https://puzzle-ferry-27e.notion.site/MeanAudio-Baseline-Demo-3192b9caac2680658c1ed7e3081729a2)，不是 L 版。這個專案訓練出來的 `fluxaudio_s_50k` 拿去跟這組數字對比，模型大小是對齊的、比較是有意義的。
+- **符合這個專案的目標**：這個專案的重點是「把 baseline pipeline 完整跑通一次、自己真的搞懂每個環節」，不是要衝出最高分數，S 版已經足夠達成這個目標，暫不考慮換 L 版。
+
 ## 資料與 checkpoint
 
 模型權重、資料集與訓練 checkpoint **不放在這個 repo**。兩份 notebook 第三階段的資料來源不一樣：
