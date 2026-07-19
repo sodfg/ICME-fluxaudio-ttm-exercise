@@ -41,9 +41,21 @@ checkpoint 與生成音檔的存取方式兩份共通：
 
 notebook 開頭的設定 cell 統一管理路徑與實驗名稱（`flux_audio_formal.ipynb` 是 `EXP_NAME`／`flux_audio_mini_test.ipynb` 是 `EXP_ID`），重新命名實驗時只需要改這一格，checkpoint 在 Drive 上的路徑會自動跟著換。
 
+### `flux_audio_formal.ipynb` 設定區參數說明
+
+| 參數 | 意思 | 目前的值 | 要不要調整 |
+|---|---|---|---|
+| `EXP_NAME` | 實驗名稱，決定 checkpoint 存在 Drive 哪個資料夾，也決定要不要接續舊 checkpoint | `fluxaudio_s_50k` | 開新實驗一定要改，見上方提醒 |
+| `NUM_ITERATIONS` | 總共要訓練幾步 | `50000` | 依實驗需求，通常步數越多模型學得越完整，但也越花時間 |
+| `BATCH_SIZE` | 每一步同時丟幾筆資料進去，算出平均誤差後才調整模型一次 | `32` | 不是越高越好，受 GPU 記憶體限制（L4 太高會爆記憶體），且通常要搭配調整學習率一起改，不建議單獨亂調 |
+| `EVAL_BATCH_SIZE` | 驗證階段一次處理幾筆資料，跟訓練用的 `BATCH_SIZE` 是分開的設定 | `32` | 一般不用特別調 |
+| `VAL_INTERVAL` | 每隔幾步暫停一下，用驗證集檢查目前訓練得怎麼樣（不會影響模型本身） | `10000` | 想更常看到進度可以調小，但每次驗證都要花額外時間，調太小會拖慢整體訓練速度 |
+| `SAVE_CHECKPOINT_INTERVAL` | 每隔幾步存一次檔到 Drive | `5000` | 前面「分段執行」討論過，想降低斷線損失可以調小，代價是存檔本身也會佔一點時間 |
+| `NUM_WORKERS` | 用幾個平行的小幫手去讀取硬碟上的資料 | `8` | 通常不用動，除非明顯感覺讀資料是瓶頸 |
+
 ## 建議與待辦
 
-- **開新的正式實驗記得改 `EXP_NAME`**：如果要用 `flux_audio_formal.ipynb` 跑一個新設定（換資料量、換超參數），先把設定區的 `EXP_NAME` 改掉，不要沿用 `fluxaudio_s_50k`，否則會直接接續／覆蓋掉已經訓練好的 50000 步 checkpoint。
+- **開新的正式實驗記得改 `EXP_NAME`**：`EXP_NAME` 決定了 checkpoint 在 Drive 上存在哪個資料夾（`FluxAudio_checkpoints/{EXP_NAME}/`），訓練開始時程式會自動去該資料夾找有沒有舊 checkpoint、有的話就接著練下去。如果要跑一個新設定（換資料量、換超參數）卻沒改 `EXP_NAME`、還是沿用 `fluxaudio_s_50k`，就會載入舊的、已經練完 50000 步的 checkpoint 當起點，輕則什麼都不會訓練（因為已經達到 `NUM_ITERATIONS`），重則新舊資料/設定混在一起練出意義不明的模型。開新實驗前，先把設定區的 `EXP_NAME` 改成沒用過的新名字（例如 `fluxaudio_s_v2`）。
 - **notebook 裡看不出目前訓練進度**：commit 前 cell output 會被清空，所以 GitHub 上完全看不到目前實際跑到第幾步、FAD/CLAP 多少分。已經另外開了 [`TRAINING_LOG.md`](./TRAINING_LOG.md) 這張純文字進度表，每次分段訓練告一段落，補一行「日期 / 實驗名稱 / 進度 / 備註」，之後回頭看或找人幫忙都不用重新解析整份 notebook。
 - **生成音檔／checkpoint 目前完全依賴瀏覽器下載**：第七、八階段最後是用 `files.download()` 觸發瀏覽器下載視窗，沒有自動存回 Drive。建議產出真的要交、要留存的版本時，順手把 checkpoint 和音檔也複製一份到 Drive 的固定資料夾，不要只靠瀏覽器下載紀錄，比較不會因為找不到本機檔案而要重新生成一次。
 - **如果常態需要一次訓練 7 小時以上**：免費版 Colab 閒置斷線／連線時數上限會是長期困擾，若這個專案還會持續訓練更大的模型或更多 iterations，值得評估升級 Colab Pro（背景執行、更長連線時數），會比一直手動分段省心。
