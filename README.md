@@ -44,7 +44,7 @@ notebook 開頭的設定 cell 統一管理路徑與實驗名稱（`flux_audio_fo
 ## 建議與待辦
 
 - **開新的正式實驗記得改 `EXP_NAME`**：如果要用 `flux_audio_formal.ipynb` 跑一個新設定（換資料量、換超參數），先把設定區的 `EXP_NAME` 改掉，不要沿用 `fluxaudio_s_50k`，否則會直接接續／覆蓋掉已經訓練好的 50000 步 checkpoint。
-- **notebook 裡看不出目前訓練進度**：commit 前 cell output 會被清空，所以 GitHub 上完全看不到目前實際跑到第幾步、FAD/CLAP 多少分，要知道進度只能自己重新打開 Colab 或去 Drive 對 checkpoint 檔案的數量／修改時間。之後如果要頻繁分段訓練，建議在這裡（或另開一個簡單的 `TRAINING_LOG.md`）手動記幾行「日期 - 實驗名稱 - 目前 iteration - 備註」，之後回頭看或找人幫忙都不用重新解析整份 notebook。
+- **notebook 裡看不出目前訓練進度**：commit 前 cell output 會被清空，所以 GitHub 上完全看不到目前實際跑到第幾步、FAD/CLAP 多少分。已經另外開了 [`TRAINING_LOG.md`](./TRAINING_LOG.md) 這張純文字進度表，每次分段訓練告一段落，補一行「日期 / 實驗名稱 / 進度 / 備註」，之後回頭看或找人幫忙都不用重新解析整份 notebook。
 - **生成音檔／checkpoint 目前完全依賴瀏覽器下載**：第七、八階段最後是用 `files.download()` 觸發瀏覽器下載視窗，沒有自動存回 Drive。建議產出真的要交、要留存的版本時，順手把 checkpoint 和音檔也複製一份到 Drive 的固定資料夾，不要只靠瀏覽器下載紀錄，比較不會因為找不到本機檔案而要重新生成一次。
 - **如果常態需要一次訓練 7 小時以上**：免費版 Colab 閒置斷線／連線時數上限會是長期困擾，若這個專案還會持續訓練更大的模型或更多 iterations，值得評估升級 Colab Pro（背景執行、更長連線時數），會比一直手動分段省心。
 
