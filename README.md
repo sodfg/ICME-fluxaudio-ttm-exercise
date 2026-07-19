@@ -59,6 +59,7 @@ notebook 開頭的設定 cell 統一管理路徑與實驗名稱（`flux_audio_fo
 - **notebook 裡看不出目前訓練進度**：commit 前 cell output 會被清空，所以 GitHub 上完全看不到目前實際跑到第幾步、FAD/CLAP 多少分。已經另外開了 [`TRAINING_LOG.md`](./TRAINING_LOG.md) 這張純文字進度表，每次分段訓練告一段落，補一行「日期 / 實驗名稱 / 進度 / 備註」，之後回頭看或找人幫忙都不用重新解析整份 notebook。
 - **生成音檔／checkpoint 目前完全依賴瀏覽器下載**：第七、八階段最後是用 `files.download()` 觸發瀏覽器下載視窗，沒有自動存回 Drive。建議產出真的要交、要留存的版本時，順手把 checkpoint 和音檔也複製一份到 Drive 的固定資料夾，不要只靠瀏覽器下載紀錄，比較不會因為找不到本機檔案而要重新生成一次。
 - **如果常態需要一次訓練 7 小時以上**：免費版 Colab 閒置斷線／連線時數上限會是長期困擾，若這個專案還會持續訓練更大的模型或更多 iterations，值得評估升級 Colab Pro（背景執行、更長連線時數），會比一直手動分段省心。
+- **改一份 notebook 的共用邏輯，記得檢查另一份要不要跟著改**：兩份 notebook 有幾格幾乎是複製貼上的（環境安裝、checkpoint symlink、評估工具安裝）。2026-07-19 抓到兩個 `flux_audio_mini_test.ipynb` 的真 bug——第八階段複製 CLAP checkpoint 前少了 `os.makedirs(exist_ok=True)`、修 `laion_clap` logging bug 的字串少寫一個反斜線（`"\t"` 被 Python 解讀成真的 tab，永遠比對不到檔案內容）——兩個都是 `flux_audio_formal.ipynb` 早就修過、但改良過程沒回頭同步到測試版留下的坑。之後修好一份，記得檢查另一份是不是也有同樣的舊寫法。
 
 ## 評估工具
 
