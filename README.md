@@ -1,6 +1,5 @@
 # ICME26 FluxAudio — Text-to-Music (ATTM)
 
-NTU 專題／畢業論文練習專案，參加 ICME 2026 Grand Challenge 的 Text-to-Music（ATTM）題目，
 在 [FluxAudio](https://github.com/ntu-musicailab/ICME26-ATTM-GC-FluxAudio)（MeanAudio 架構）上做資料前處理、訓練、生成與評估，
 整個流程在 Google Colab 上執行。
 
