@@ -1,16 +1,66 @@
 # ICME26 FluxAudio — Text-to-Music (ATTM)
 
-在 [FluxAudio](https://github.com/ntu-musicailab/ICME26-ATTM-GC-FluxAudio)（MeanAudio 架構）上做資料前處理、訓練、生成與評估，
-整個流程在 Google Colab 上執行。
+在 [FluxAudio](https://github.com/ntu-musicailab/ICME26-ATTM-GC-FluxAudio)（MeanAudio 架構）上做資料前處理、訓練、生成與評估，整個流程在 Google Colab 上執行。
 
-## 檔案
+---
 
-- `flux_audio_formal.ipynb` — **正式訓練**主線 notebook，`fluxaudio_s_50k` 實驗，完整 50000 iterations，包含完整 8 階段 pipeline。
-- `flux_audio_mini_test.ipynb` — **煙霧測試**版，`mini_test_1k` 實驗，只跑 1000 iterations，用來快速驗證整條 pipeline 能不能跑通，不求生成品質。
+## 🚀 快速開始
 
-兩份檔案用不同的 `EXP_ID` / `EXP_NAME`，checkpoint 各自存在 Google Drive 底下不同的資料夾，互不影響，可以放心各自執行。
+### 我想要...
 
-## 圖解說明
+| 目標 | 選擇 notebook | 所需時間 | 難度 |
+|------|-------------|--------|------|
+| **驗證 pipeline 能跑通** | [📝 煙霧測試](archive/flux_audio_mini_test.ipynb) | 30-45 分鐘 | ⭐ 簡單 |
+| **訓練到 150k 迭代** | [🔥 完整訓練](notebooks/fluxaudio_train_colab.ipynb) | 7-8 小時 | ⭐⭐ 中等 |
+| **評估已訓練的模型** | [📊 150k 評估](notebooks/fluxaudio_eval_150k_colab.ipynb) | 1-2 小時 | ⭐⭐ 中等 |
+
+### 基本步驟
+
+1. **準備**：Google Colab + Google Drive（存放 checkpoint 和資料）
+2. **選擇**：上表挑一個 notebook
+3. **執行**：在 Colab 打開後，按 ▶️ 從上到下執行每一格
+4. **結果**：訓練完成後，checkpoint 存在 Drive；評估結果存在 notebook cell 輸出
+
+> 💡 **第一次推薦**：先跑煙霧測試驗證環境，再進行完整訓練
+
+---
+
+## 📁 檔案結構與說明
+
+## 📁 檔案結構與說明
+
+### Notebooks
+
+**主要訓練/評估 Notebooks：**
+
+- **[notebooks/fluxaudio_train_colab.ipynb](notebooks/fluxaudio_train_colab.ipynb)** — 完整訓練 pipeline  
+  包含 8 個階段：環境設置、資料加載、特徵萃取、模型訓練、推論、評估。支持從 50k 恢復訓練到 150k 迭代。
+  
+- **[notebooks/fluxaudio_eval_150k_colab.ipynb](notebooks/fluxaudio_eval_150k_colab.ipynb)** — 150k 評估專用  
+  使用 100 首測試歌曲（300 個 10 秒片段）計算 FAD 和 CLAP 分數。
+
+### 文檔
+
+- **[docs/RESULTS.md](docs/RESULTS.md)** — 150k 訓練結果  
+  驗證的評估指標：FAD=0.413、CLAP Matched=0.204、CLAP Shuffled=0.071
+  
+- **[docs/troubleshooting.md](docs/troubleshooting.md)** — 故障排除指南  
+  常見 Colab 問題和解決方案
+
+### 歷史檔案（archive/）
+
+- [archive/flux_audio_mini_test.ipynb](archive/flux_audio_mini_test.ipynb) — 煙霧測試版本（1000 iterations）  
+  用於快速驗證 pipeline 完整性
+  
+- [archive/TRAINING_LOG.md](archive/TRAINING_LOG.md) — 訓練進度歷史紀錄
+  
+- [archive/SYMLINKS.md](archive/SYMLINKS.md) — Google Drive symlink 配置說明
+
+---
+
+## 📚 詳細說明
+
+### Notebooks
 
 - [三個雲的儲存空間地圖](https://claude.ai/code/artifact/6fc6c7ae-b229-42cd-8079-660d0d822fd0)
   — 視覺化說明 symlink、npz、av_bench，以及資料／checkpoint／生成音檔分別存在哪個空間。
@@ -77,7 +127,7 @@ notebook 開頭的設定 cell 統一管理路徑與實驗名稱（`flux_audio_fo
 ## 建議與待辦
 
 - **開新的正式實驗記得改 `EXP_NAME`**：`EXP_NAME` 決定了 checkpoint 在 Drive 上存在哪個資料夾（`FluxAudio_checkpoints/{EXP_NAME}/`），訓練開始時程式會自動去該資料夾找有沒有舊 checkpoint、有的話就接著練下去。如果要跑一個新設定（換資料量、換超參數）卻沒改 `EXP_NAME`、還是沿用 `fluxaudio_s_50k`，就會載入舊的、已經練完 50000 步的 checkpoint 當起點，輕則什麼都不會訓練（因為已經達到 `NUM_ITERATIONS`），重則新舊資料/設定混在一起練出意義不明的模型。開新實驗前，先把設定區的 `EXP_NAME` 改成沒用過的新名字（例如 `fluxaudio_s_v2`）。
-- **notebook 裡看不出目前訓練進度**：commit 前 cell output 會被清空，所以 GitHub 上完全看不到目前實際跑到第幾步、FAD/CLAP 多少分。已經另外開了 [`TRAINING_LOG.md`](./TRAINING_LOG.md) 這張純文字進度表，每次分段訓練告一段落，補一行「日期 / 實驗名稱 / 進度 / 備註」，之後回頭看或找人幫忙都不用重新解析整份 notebook。
+- **notebook 裡看不出目前訓練進度**：commit 前 cell output 會被清空，所以 GitHub 上完全看不到目前實際跑到第幾步、FAD/CLAP 多少分。已經另外開了 [`TRAINING_LOG.md`](./archive/TRAINING_LOG.md) 這張純文字進度表，每次分段訓練告一段落，補一行「日期 / 實驗名稱 / 進度 / 備註」，之後回頭看或找人幫忙都不用重新解析整份 notebook。
 - **生成音檔／checkpoint 目前完全依賴瀏覽器下載**：第七、八階段最後是用 `files.download()` 觸發瀏覽器下載視窗，沒有自動存回 Drive。建議產出真的要交、要留存的版本時，順手把 checkpoint 和音檔也複製一份到 Drive 的固定資料夾，不要只靠瀏覽器下載紀錄，比較不會因為找不到本機檔案而要重新生成一次。
 - **如果常態需要一次訓練 7 小時以上**：免費版 Colab 閒置斷線／連線時數上限會是長期困擾，若這個專案還會持續訓練更大的模型或更多 iterations，值得評估升級 Colab Pro（背景執行、更長連線時數），會比一直手動分段省心。
 - **改一份 notebook 的共用邏輯，記得檢查另一份要不要跟著改**：兩份 notebook 有幾格幾乎是複製貼上的（環境安裝、checkpoint symlink、評估工具安裝）。2026-07-19 抓到兩個 `flux_audio_mini_test.ipynb` 的真 bug——第八階段複製 CLAP checkpoint 前少了 `os.makedirs(exist_ok=True)`、修 `laion_clap` logging bug 的字串少寫一個反斜線（`"\t"` 被 Python 解讀成真的 tab，永遠比對不到檔案內容）——兩個都是 `flux_audio_formal.ipynb` 早就修過、但改良過程沒回頭同步到測試版留下的坑。之後修好一份，記得檢查另一份是不是也有同樣的舊寫法。
