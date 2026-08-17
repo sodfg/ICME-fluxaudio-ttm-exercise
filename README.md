@@ -3,12 +3,19 @@
 在 [FluxAudio](https://github.com/ntu-musicailab/ICME26-ATTM-GC-FluxAudio)（MeanAudio 架構）上做資料前處理、訓練、生成與評估，
 整個流程在 Google Colab 上執行。
 
-## 檔案
+## Notebooks
 
-- `flux_audio_formal.ipynb` — **正式訓練**主線 notebook，`fluxaudio_s_50k` 實驗，完整 50000 iterations，包含完整 8 階段 pipeline。
-- `flux_audio_mini_test.ipynb` — **煙霧測試**版，`mini_test_1k` 實驗，只跑 1000 iterations，用來快速驗證整條 pipeline 能不能跑通，不求生成品質。
+本 repository 包含兩份正式訓練/評估 Colab notebook：
 
-兩份檔案用不同的 `EXP_ID` / `EXP_NAME`，checkpoint 各自存在 Google Drive 底下不同的資料夾，互不影響，可以放心各自執行。
+- **[notebooks/fluxaudio_train_colab.ipynb](notebooks/fluxaudio_train_colab.ipynb)** — 完整訓練 pipeline，支持從 50k 恢復訓練到 150k 迭代。包含 8 個階段：環境設置、資料加載、特徵萃取、模型訓練、推論、評估（FAD/CLAP）。
+  
+- **[notebooks/fluxaudio_eval_150k_colab.ipynb](notebooks/fluxaudio_eval_150k_colab.ipynb)** — 針對 150k checkpoint 的評估專用 notebook。使用 100 首測試歌曲（300 個 10 秒片段）計算 FAD 和 CLAP 分數。
+
+### 歷史檔案
+
+- [archive/flux_audio_mini_test.ipynb](archive/flux_audio_mini_test.ipynb) — 煙霧測試版本（1000 iterations），用於快速驗證 pipeline 完整性。
+- [archive/TRAINING_LOG.md](archive/TRAINING_LOG.md) — 訓練進度歷史紀錄。
+- [archive/SYMLINKS.md](archive/SYMLINKS.md) — Google Drive symlink 配置說明。
 
 ## 圖解說明
 
