@@ -9,12 +9,18 @@ CLAUDE.md
 
 # 模型權重、checkpoint、音檔、資料集（放 Google Drive，不進 git）
 *.pth
+*.pt
 *.ckpt
 *.safetensors
 *.wav
 *.mp3
 *.flac
+*.ogg
+*.m4a
 *.zip
+
+# NPZ 特徵檔案
+*.npz
 
 # Python
 __pycache__/
@@ -22,5 +28,23 @@ __pycache__/
 .venv/
 venv/
 
+# 環境、快取、生成的檔案
+.env
+.env.local
+weights/
+data/
+exps/
+outputs/
+wandb/
+
 # OS
 .DS_Store
+.AppleDouble
+.LSOverride
+
+# 編輯器
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
